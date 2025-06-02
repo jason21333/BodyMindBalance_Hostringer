@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${sourceCode.variable}`}>
       <head>
-        <link rel="icon" href="/bmb-logo.svg" />
+        <link rel="icon" href="/bmb-logo.png" />
       </head>
       <body className="antialiased">
         <div className="flex flex-col min-h-screen">

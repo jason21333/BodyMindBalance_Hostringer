@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import OptimizedImage from './OptimizedImage';
 
 export default function Hero() {
   return (
@@ -60,8 +59,8 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative h-[600px] w-full rounded-3xl overflow-hidden shadow-2xl"
           >
-            <OptimizedImage
-              src="/doctor-hero.jpg"
+            <Image
+              src="/agit-roy.jpg"
               alt="Professional medical team"
               fill
               className="object-cover"

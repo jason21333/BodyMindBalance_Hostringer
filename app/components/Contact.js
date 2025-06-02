@@ -165,7 +165,7 @@ export default function Contact() {
                 </svg>
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900">Phone</h4>
-                  <p className="text-gray-600">+91 7066776773</p>
+                  <p className="text-gray-600">9005003044</p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">

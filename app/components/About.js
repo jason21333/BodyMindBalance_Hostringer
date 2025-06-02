@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import OptimizedImage from './OptimizedImage';
+import Image from 'next/image';
 
 export default function About() {
   return (
@@ -16,9 +16,9 @@ export default function About() {
             transition={{ duration: 0.8 }}
             className="relative h-[500px] rounded-2xl overflow-hidden shadow-xl"
           >
-            <OptimizedImage
-              src="/doctor-team.jpg"
-              alt="Our medical team"
+            <Image
+              src="/healthcare-wellbeing.jpg"
+              alt="Healthcare and Well-being at Body Mind Balance"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"

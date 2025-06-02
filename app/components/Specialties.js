@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import OptimizedImage from './OptimizedImage';
+import Image from 'next/image';
 
 const specialties = [
   {
@@ -13,13 +13,13 @@ const specialties = [
   {
     title: 'Hypertension',
     description: 'Expert care for high blood pressure with personalized treatment plans and regular monitoring.',
-    image: '/holter.jpg',
+    image: '/hypertension.jpg',
     features: ['Blood Pressure Monitoring', 'Risk Assessment', 'Medication Review', 'Lifestyle Modifications']
   },
   {
     title: 'Weight Loss',
     description: 'Scientifically-backed weight management programs tailored to your unique needs and goals.',
-    image: '/ultrasound.jpg',
+    image: '/weightloss.jpg',
     features: ['Body Composition Analysis', 'Nutrition Planning', 'Exercise Programs', 'Behavioral Support']
   }
 ];
@@ -62,7 +62,7 @@ export default function Specialties() {
             >
               <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
                 <div className="relative h-64">
-                  <OptimizedImage
+                  <Image
                     src={specialty.image}
                     alt={specialty.title}
                     fill

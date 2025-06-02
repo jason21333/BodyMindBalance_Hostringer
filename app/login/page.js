@@ -25,19 +25,21 @@ export default function LoginPage() {
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <Image
-            src="/logo.png"
-            alt="Body Mind Balance Logo"
-            width={120}
-            height={120}
-            className="mx-auto"
-          />
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Welcome Back
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Please sign in to your account
-          </p>
+          <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <Image
+              src="/bmb-logo.png"
+              alt="Body Mind Balance Logo"
+              width={250}
+              height={100}
+              className="mx-auto"
+            />
+            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+              Welcome Back
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Please sign in to your account
+            </p>
+          </div>
         </motion.div>
 
         <motion.form

@@ -10,26 +10,38 @@ const testimonials = [
     name: 'Priya Sharma',
     role: 'Diabetes Management Patient',
     quote: 'The diabetes care program at Body Mind Balance has transformed my life. Their comprehensive approach and constant support have helped me maintain stable blood sugar levels and improve my overall health.',
-    image: '/testimonial-1.jpg'
+    image: '/agit-roy.jpg'
   },
   {
     id: 2,
     name: 'Rajesh Patel',
     role: 'Weight Loss Program Participant',
     quote: 'Thanks to the dedicated team at BMB, I\'ve lost 15 kgs and kept it off. Their personalized approach to weight management and continuous encouragement made all the difference.',
-    image: '/testimonial-2.jpg'
+    image: '/hypertension.jpg'
   },
   {
     id: 3,
     name: 'Anita Desai',
     role: 'Hypertension Patient',
     quote: 'The hypertension management program has been excellent. Regular monitoring and lifestyle guidance have helped me maintain healthy blood pressure levels naturally.',
-    image: '/testimonial-3.jpg'
+    image: '/blood-disorders.jpg'
   }
 ];
 
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const handlePrevious = () => {
+    setActiveIndex((prevIndex) => 
+      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
+    );
+  };
+
+  const handleNext = () => {
+    setActiveIndex((prevIndex) => 
+      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
   return (
     <section id="testimonials" className="py-20 bg-gray-50">
@@ -53,6 +65,26 @@ export default function Testimonials() {
 
         {/* Testimonials Carousel */}
         <div className="relative">
+          {/* Navigation Arrows */}
+          <button
+            onClick={handlePrevious}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none"
+            aria-label="Previous testimonial"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none"
+            aria-label="Next testimonial"
+          >
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
           <div className="overflow-hidden">
             <motion.div
               className="flex"

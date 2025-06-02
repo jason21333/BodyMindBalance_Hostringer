@@ -36,10 +36,10 @@ export default function Navbar() {
             <Link href="/">
               <div className="menu-logo-wrapper">
                 <Image
-                  src="/bmb-logo.svg"
+                  src="/bmb-logo.png"
                   alt="Body Mind Balance Logo"
-                  width={40}
-                  height={40}
+                  width={250}
+                  height={100}
                   className="menu-logo"
                   priority
                 />

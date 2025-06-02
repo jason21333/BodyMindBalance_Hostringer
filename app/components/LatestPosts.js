@@ -9,19 +9,19 @@ export default function LatestPosts() {
       id: 1,
       title: 'Understanding Diabetes Management',
       description: 'Learn about the latest approaches to managing diabetes effectively.',
-      image: '/blog-1.jpg',
+      image: '/agit-roy.jpg',
     },
     {
       id: 2,
       title: 'Hypertension: Prevention Tips',
       description: 'Discover lifestyle changes that can help prevent and manage hypertension.',
-      image: '/blog-2.jpg',
+      image: '/hypertension.jpg',
     },
     {
       id: 3,
       title: 'Healthy Weight Loss Strategies',
       description: 'Evidence-based strategies for sustainable weight management.',
-      image: '/blog-3.jpg',
+      image: '/blood-disorders.jpg',
     },
   ];
 
