@@ -6,14 +6,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function LoginPage() {
-  const [role, setRole] = useState('patient');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // TODO: Implement authentication logic
-    console.log('Login attempt:', { role, email, password });
+    console.log('Admin login attempt:', { email, password });
   };
 
   return (
@@ -34,10 +33,10 @@ export default function LoginPage() {
               className="mx-auto"
             />
             <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-              Welcome Back
+              Admin Login
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Please sign in to your account
+              Please sign in to access the admin dashboard
             </p>
           </div>
         </motion.div>
@@ -50,32 +49,6 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
         >
           <div className="space-y-4">
-            {/* Role Selection */}
-            <div className="flex gap-4 justify-center">
-              <button
-                type="button"
-                onClick={() => setRole('patient')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  role === 'patient'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Patient
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('admin')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  role === 'admin'
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                Admin
-              </button>
-            </div>
-
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -141,17 +114,6 @@ export default function LoginPage() {
               Sign in
             </button>
           </div>
-
-          {role === 'patient' && (
-            <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
-                <Link href="/register" className="font-medium text-primary-600 hover:text-primary-500">
-                  Register here
-                </Link>
-              </p>
-            </div>
-          )}
         </motion.form>
       </div>
     </div>

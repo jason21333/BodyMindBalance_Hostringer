@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import OptimizedImage from './OptimizedImage';
+import Image from 'next/image';
 
 export default function LatestPosts() {
   const posts = [
@@ -9,7 +9,7 @@ export default function LatestPosts() {
       id: 1,
       title: 'Understanding Diabetes Management',
       description: 'Learn about the latest approaches to managing diabetes effectively.',
-      image: '/agit-roy.jpg',
+      image: '/Diabetes.jpg',
     },
     {
       id: 2,
@@ -43,13 +43,13 @@ export default function LatestPosts() {
               className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               <div className="relative h-48">
-                <OptimizedImage
+                <Image
                   src={post.image}
                   alt={post.title}
-                  width={400}
-                  height={300}
-                  priority={index === 0}
+                  fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority={index === 0}
                 />
               </div>
               <div className="p-6">

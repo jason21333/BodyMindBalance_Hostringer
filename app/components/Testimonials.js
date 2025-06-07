@@ -1,35 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import OptimizedImage from './OptimizedImage';
 
 const testimonials = [
   {
     id: 1,
-    name: 'Priya Sharma',
-    role: 'Diabetes Management Patient',
-    quote: 'The diabetes care program at Body Mind Balance has transformed my life. Their comprehensive approach and constant support have helped me maintain stable blood sugar levels and improve my overall health.',
+    name: 'Sonali Girase',
+    role: 'Diabetes Care Patient',
+    quote: 'Taking treatment for my mother, she is high diabetic and had very unusual condition and admitted. We came to know about Dr. Ajit Roy in hospital and he visited my mother and started cure her and in 2-3 days we have seen a tremendous change in her health....he not only treat but also studied her pattern of fluctuations in sugar and given treatment in every way of manner like doses, exercises, diet plan and mental peace. He explained us in such a way that never ever any diabetologist had. I really appreciate that he has shared his no. for patients emergency and replied also as and when needed. I would really recommend him to diabetic patients.',
     image: '/agit-roy.jpg'
   },
   {
     id: 2,
-    name: 'Rajesh Patel',
-    role: 'Weight Loss Program Participant',
-    quote: 'Thanks to the dedicated team at BMB, I\'ve lost 15 kgs and kept it off. Their personalized approach to weight management and continuous encouragement made all the difference.',
-    image: '/hypertension.jpg'
+    name: 'OnKeshwar Tiwari',
+    role: 'Diabetes Care Patient',
+    quote: 'My sugar level was 497 after just 3 months of treatment my sugar level dropped to 122. I am truly thankful to Dr Ajit roy for the care and guidance.',
+    image: '/agit-roy.jpg'
   },
   {
     id: 3,
-    name: 'Anita Desai',
-    role: 'Hypertension Patient',
-    quote: 'The hypertension management program has been excellent. Regular monitoring and lifestyle guidance have helped me maintain healthy blood pressure levels naturally.',
-    image: '/blood-disorders.jpg'
+    name: 'Anuj Tiwari',
+    role: 'General patient',
+    quote: 'Dr. Ajit is an outstanding medical professional. His composed and attentive approach ensures a comfortable experience for every patient. His examinations are thorough and precise. I have been going there for regular checkups on my grandmother, and the results have been truly remarkable. Her health has seen steady improvement under his expert guidance.',
+    image: '/agit-roy.jpg'
+  },
+  {
+    id: 4,
+    name: 'Omprakash Suvarna',
+    role: 'Diabetes Care Patient',
+    quote: 'Overall Good experience....Dr has good knowledge about diabetes...above all he talks about Diabetes reversal which other Doctors never talk about they just say Diabetes will be there till you are alive...I was looking out for a Diabtologist for my mother in Palava city and the search ends here...',
+    image: '/agit-roy.jpg'
+  },
+  {
+    id: 5,
+    name: 'Monika Rathore',
+    role: 'Diabetes Care Patient',
+    quote: 'Dr. Roy\'s clinic in Thane is a haven for individuals seeking effective diabetes reversal. His personalized nutrition plans, and emphasis on overall well-being have made a significant difference in my life.',
+    image: '/agit-roy.jpg'
   }
 ];
 
 export default function Testimonials() {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    }, 5000); // Change slide every 5 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const handlePrevious = () => {
     setActiveIndex((prevIndex) => 
