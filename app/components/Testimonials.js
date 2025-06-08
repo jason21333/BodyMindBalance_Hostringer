@@ -1,29 +1,29 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import OptimizedImage from './OptimizedImage';
 
 const testimonials = [
   {
     id: 1,
-    name: 'Sonali Girase',
-    role: 'Diabetes Care Patient',
-    quote: 'Taking treatment for my mother, she is high diabetic and had very unusual condition and admitted. We came to know about Dr. Ajit Roy in hospital and he visited my mother and started cure her and in 2-3 days we have seen a tremendous change in her health....he not only treat but also studied her pattern of fluctuations in sugar and given treatment in every way of manner like doses, exercises, diet plan and mental peace. He explained us in such a way that never ever any diabetologist had. I really appreciate that he has shared his no. for patients emergency and replied also as and when needed. I would really recommend him to diabetic patients.',
+    name: 'Raman Sharma',
+    role: 'Diabetes Patient',
+    quote: 'Dr. Roy\'s approach to diabetes reversal is truly groundbreaking. I never thought I could manage my condition so effectively without constant medication. Highly recommended!',
     image: '/agit-roy.jpg'
   },
   {
     id: 2,
-    name: 'OnKeshwar Tiwari',
-    role: 'Diabetes Care Patient',
-    quote: 'My sugar level was 497 after just 3 months of treatment my sugar level dropped to 122. I am truly thankful to Dr Ajit roy for the care and guidance.',
+    name: 'Priya Singh',
+    role: 'Hypertension Patient',
+    quote: 'I struggled with high blood pressure for years, but with Body Mind Balance, I\'ve seen incredible improvements. Their holistic plan changed my life.',
     image: '/agit-roy.jpg'
   },
   {
     id: 3,
-    name: 'Anuj Tiwari',
-    role: 'General patient',
-    quote: 'Dr. Ajit is an outstanding medical professional. His composed and attentive approach ensures a comfortable experience for every patient. His examinations are thorough and precise. I have been going there for regular checkups on my grandmother, and the results have been truly remarkable. Her health has seen steady improvement under his expert guidance.',
+    name: 'Amit Patel',
+    role: 'Weight Management Client',
+    quote: 'The personalized weight management program helped me achieve my goals safely and sustainably. I feel more energetic and healthier than ever.',
     image: '/agit-roy.jpg'
   },
   {
@@ -43,25 +43,38 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
-    }, 5000); // Change slide every 5 seconds
-    return () => clearInterval(interval);
-  }, []);
-
-  const handlePrevious = () => {
-    setActiveIndex((prevIndex) => 
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
-  const handleNext = () => {
-    setActiveIndex((prevIndex) => 
-      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-    );
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Auto-scroll functionality
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      nextTestimonial();
+    }, 5000); // Change testimonial every 5 seconds
+
+    return () => clearInterval(timer);
+  }, [isPaused]);
+
+  // Pause auto-scroll when user interacts with navigation
+  const handleManualNavigation = (direction) => {
+    setIsPaused(true);
+    if (direction === 'next') {
+      nextTestimonial();
+    } else {
+      prevTestimonial();
+    }
+    // Resume auto-scroll after 10 seconds of no interaction
+    setTimeout(() => setIsPaused(false), 10000);
   };
 
   return (
@@ -85,42 +98,74 @@ export default function Testimonials() {
         </motion.div>
 
         {/* Testimonials Carousel */}
-        <div className="relative">
-          <div className="overflow-hidden">
-            <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={testimonial.id}
-                  className="w-full flex-shrink-0 px-2 sm:px-4"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ 
-                    duration: 0.8,
-                    delay: index * 0.2,
-                    ease: "easeOut"
-                  }}
-                >
-                  <div className="bg-white rounded-2xl shadow-xl p-3 sm:p-4">
-                    <div className="flex flex-col md:flex-row items-center gap-2 sm:gap-3">
-                      <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden">
-                        <OptimizedImage
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                      <div className="flex-1 text-center md:text-left">
-                        <p className="text-sm sm:text-base text-gray-600 italic mb-1 sm:mb-2">"{testimonial.quote}"</p>
-                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">{testimonial.name}</h3>
-                        <p className="text-primary-600 text-xs sm:text-sm">{testimonial.role}</p>
-                      </div>
-                    </div>
+        <div className="relative max-w-4xl mx-auto">
+          <div className="relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white rounded-2xl shadow-xl p-6 md:p-8 lg:p-10"
+              >
+                <div className="flex items-center gap-4 md:gap-6 mb-6 md:mb-8">
+                  <div className="relative w-16 h-16 md:w-24 md:h-24 rounded-full overflow-hidden flex-shrink-0">
+                    <OptimizedImage
+                      src={testimonials[currentIndex].image}
+                      alt={testimonials[currentIndex].name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
-                </motion.div>
-              ))}
-            </div>
+                  <div>
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-semibold text-gray-900">{testimonials[currentIndex].name}</h3>
+                    <p className="text-primary-600 text-sm md:text-base lg:text-lg">{testimonials[currentIndex].role}</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 italic text-base md:text-lg lg:text-xl leading-relaxed">"{testimonials[currentIndex].quote}"</p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="flex justify-center gap-4 mt-8">
+            <button
+              onClick={() => handleManualNavigation('prev')}
+              className="p-2 md:p-3 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
+              aria-label="Previous testimonial"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => handleManualNavigation('next')}
+              className="p-2 md:p-3 rounded-full bg-white shadow-md hover:bg-gray-50 transition-colors"
+              aria-label="Next testimonial"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Dots Navigation */}
+          <div className="flex justify-center gap-2 mt-4">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setIsPaused(true);
+                  setCurrentIndex(index);
+                  setTimeout(() => setIsPaused(false), 10000);
+                }}
+                className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-primary-600' : 'bg-gray-300'
+                }`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

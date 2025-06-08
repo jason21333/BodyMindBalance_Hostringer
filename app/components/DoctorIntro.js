@@ -24,13 +24,13 @@ export default function DoctorIntro() {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-          {/* Doctor's Photo */}
+          {/* Doctor's Photo and Quote */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative flex flex-col items-center"
+            className="relative flex flex-col h-full"
           >
             <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
@@ -42,10 +42,11 @@ export default function DoctorIntro() {
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 80vw, 50vw"
                 quality={100}
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"></div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"></div>
-            <div className="mt-12 text-center max-w-2xl mx-auto">
-              <p className="text-3xl md:text-4xl font-light text-primary-600 italic leading-relaxed tracking-wide">
+            {/* Quote adjusted to be in the empty space below the photo */}
+            <div className="text-center max-w-2xl mx-auto flex-grow flex items-center justify-center py-4">
+              <p className="text-xl sm:text-2xl font-bold text-gray-900 italic leading-relaxed tracking-wide">
                 "Diabetes is a condition, not a life sentence."
               </p>
             </div>

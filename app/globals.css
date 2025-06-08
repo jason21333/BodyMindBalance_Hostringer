@@ -8,6 +8,16 @@
   --primary: #860f44;
   --secondary: #bb3939;
   --accent: #ea5f2d;
+  --primary-50: #f0f9ff;
+  --primary-100: #e0f2fe;
+  --primary-200: #b9e6fe;
+  --primary-300: #7cd4fd;
+  --primary-400: #36bffa;
+  --primary-500: #0ca6eb;
+  --primary-600: #0086c9;
+  --primary-700: #026aa2;
+  --primary-800: #065986;
+  --primary-900: #0c4a6e;
 }
 
 html {

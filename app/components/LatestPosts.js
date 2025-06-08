@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function LatestPosts() {
   const posts = [
@@ -10,12 +11,14 @@ export default function LatestPosts() {
       title: 'Understanding Diabetes Management',
       description: 'Learn about the latest approaches to managing diabetes effectively.',
       image: '/Diabetes.jpg',
+      link: '/blog/understanding-diabetes-management'
     },
     {
       id: 2,
       title: 'Hypertension: Prevention Tips',
       description: 'Discover lifestyle changes that can help prevent and manage hypertension.',
       image: '/hypertension.jpg',
+      link: '/blog/hypertension-prevention'
     },
     {
       id: 3,
@@ -55,9 +58,9 @@ export default function LatestPosts() {
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
                 <p className="text-gray-600">{post.description}</p>
-                <button className="mt-4 text-primary-600 font-semibold hover:text-primary-700 transition-colors">
+                <Link href={post.link || '#'} className="mt-4 text-primary-600 font-semibold hover:text-primary-700 transition-colors">
                   Read More →
-                </button>
+                </Link>
               </div>
             </motion.article>
           ))}
