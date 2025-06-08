@@ -3,30 +3,45 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
+
+const stats = [
+  {
+    value: "10+",
+    label: "Years Experience"
+  },
+  {
+    value: "5k+",
+    label: "Happy Patients"
+  },
+  {
+    value: "99%",
+    label: "Success Rate"
+  }
+];
+
+const slides = [
+  {
+    image: '/clinc-bmb.jpg',
+    alt: 'Body Mind Balance Clinic Front View'
+  },
+  {
+    image: '/Doc.jpeg',
+    alt: 'Dr. Ajit Roy at Clinic'
+  },
+  {
+    image: '/Nurse.jpeg',
+    alt: 'Nurse at Body Mind Balance Clinic'
+  }
+];
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const slides = [
-    {
-      image: '/clinc-bmb.jpg',
-      alt: 'Body Mind Balance Clinic'
-    },
-    {
-      image: '/Doc.jpeg',
-      alt: 'Expert Medical Professional'
-    },
-    {
-      image: '/Nurse.jpeg',
-      alt: 'Dedicated Healthcare Team'
-    }
-  ];
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000); // Change slide every 5 seconds
-
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -38,71 +53,73 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative w-full min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <section className="relative w-full h-[auto] min-h-[80vh] sm:h-[85vh] md:h-[90vh] bg-gradient-to-b from-blue-50 to-white pb-0">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center lg:text-left"
+            className="text-center lg:text-left space-y-6 sm:space-y-8"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
               Your Journey to{' '}
               <span className="text-primary-600">Complete Wellness</span>
             </h1>
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl lg:max-w-none">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-2xl lg:max-w-none">
               Expert care for diabetes, hypertension, and weight management. 
               Our holistic approach ensures your path to better health and well-being.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button 
-                onClick={scrollToAppointment}
-                className="bg-primary-600 text-white px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+              <Link 
+                href="/appointment"
+                className="bg-primary-600 text-white px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base md:text-lg font-semibold hover:bg-primary-700 transition-colors shadow-lg hover:shadow-xl"
               >
                 Book Appointment
-              </button>
-              <button className="border-2 border-primary-600 text-primary-600 px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-50 transition-colors">
+              </Link>
+              <Link 
+                href="/about" 
+                className="border-2 border-primary-600 text-primary-600 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-full text-sm sm:text-base md:text-lg font-semibold hover:bg-primary-50 transition-colors"
+              >
                 Learn More
-              </button>
+              </Link>
             </div>
-            
+
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-8 mt-12">
-              <div>
-                <h3 className="text-3xl font-bold text-primary-600">10+</h3>
-                <p className="text-gray-600">Years Experience</p>
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-primary-600">5k+</h3>
-                <p className="text-gray-600">Happy Patients</p>
-              </div>
-              <div>
-                <h3 className="text-3xl font-bold text-primary-600">99%</h3>
-                <p className="text-gray-600">Success Rate</p>
-              </div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8"
+            >
+              {stats.map((stat, index) => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-600 mb-1 sm:mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs sm:text-sm md:text-base text-gray-600">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
           </motion.div>
 
-          {/* Image Carousel */}
+          {/* Image Slider */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative h-[700px] w-full lg:w-[110%] rounded-3xl overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl"
           >
-            {slides.map((slide, index) => (
+            {slides.map((slide, idx) => (
               <motion.div
-                key={index}
+                key={idx}
                 initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: currentSlide === index ? 1 : 0,
-                  x: `${(index - currentSlide) * 100}%`
-                }}
+                animate={{ opacity: currentSlide === idx ? 1 : 0 }}
                 transition={{ duration: 0.5 }}
                 className="absolute inset-0"
               >
@@ -112,28 +129,11 @@ export default function Hero() {
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  priority={index === 0}
-                  style={{
-                    objectPosition: index === 0 ? 'center 60%' : 'center'
-                  }}
+                  priority={idx === 0}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-black/20" />
               </motion.div>
             ))}
-
-            {/* Navigation Dots */}
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                    currentSlide === index ? 'bg-white' : 'bg-white/50'
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
           </motion.div>
         </div>
       </div>

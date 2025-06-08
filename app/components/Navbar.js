@@ -4,18 +4,13 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
+import Grip from './Grip';
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-
-  const scrollToAppointment = () => {
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,8 +34,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-1 sm:px-2 lg:px-3">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-4">
-            <div className="relative w-20 h-20">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="relative w-16 h-16 md:w-20 md:h-20">
               <Image
                 src="/bmb-logo.png"
                 alt="Body Mind Balance Logo"
@@ -48,7 +43,7 @@ export default function Navbar() {
                 className="object-contain scale-110 hover:scale-125 transition-transform duration-300"
               />
             </div>
-            <span className="text-xl font-bold text-gray-900">Body Mind Balance</span>
+            <span className="text-lg md:text-xl font-bold text-gray-900">Body Mind Balance</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,14 +57,11 @@ export default function Navbar() {
             <Link href="/#services" className="text-gray-900 hover:text-black transition-colors">
               Services
             </Link>
-            <Link href="/#testimonials" className="text-gray-900 hover:text-black transition-colors">
-              Testimonials
-            </Link>
             <Link href="/#contact" className="text-gray-900 hover:text-black transition-colors">
               Contact
             </Link>
             <Link 
-              href="/appointment"
+              href="/appointment" 
               className="bg-primary-600 text-white px-5 py-2 rounded-full text-base font-semibold hover:bg-black transition-colors ml-4"
             >
               Book Appointment
@@ -104,14 +96,11 @@ export default function Navbar() {
               <Link href="/#services" className="block px-3 py-2 text-gray-900 hover:text-black transition-colors">
                 Services
               </Link>
-              <Link href="/#testimonials" className="block px-3 py-2 text-gray-900 hover:text-black transition-colors">
-                Testimonials
-              </Link>
               <Link href="/#contact" className="block px-3 py-2 text-gray-900 hover:text-black transition-colors">
                 Contact
               </Link>
               <Link 
-                href="/appointment"
+                href="/appointment" 
                 className="block w-full text-left px-3 py-2 bg-primary-600 text-white rounded-full text-base font-semibold hover:bg-black transition-colors"
               >
                 Book Appointment

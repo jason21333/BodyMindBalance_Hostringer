@@ -5,8 +5,8 @@ import Image from 'next/image';
 
 export default function DoctorIntro() {
   return (
-    <section id="doctor-intro" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pb-20 bg-white">
+      <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -30,20 +30,25 @@ export default function DoctorIntro() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="relative"
+            className="relative flex flex-col items-center"
           >
-            <div className="relative w-full h-[800px] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] rounded-2xl overflow-hidden shadow-2xl">
               <Image
                 src="/agit-roy.jpg"
                 alt="Dr. Ajit Roy"
                 fill
                 className="object-cover object-center"
                 priority
-                sizes="(max-width: 768px) 100vw, 50vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 80vw, 50vw"
                 quality={100}
               />
             </div>
             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl pointer-events-none"></div>
+            <div className="mt-12 text-center max-w-2xl mx-auto">
+              <p className="text-3xl md:text-4xl font-light text-primary-600 italic leading-relaxed tracking-wide">
+                "Diabetes is a condition, not a life sentence."
+              </p>
+            </div>
           </motion.div>
 
           {/* Doctor's Introduction */}
