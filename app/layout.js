@@ -1,4 +1,5 @@
 import { Inter, Source_Code_Pro } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import Navbar from "./components/Navbar";
 import "./globals.css";
 import Footer, { WhatsAppButton } from './components/Footer';
@@ -33,6 +34,7 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
           <WhatsAppButton />
+          <Analytics />
         </div>
       </body>
     </html>
