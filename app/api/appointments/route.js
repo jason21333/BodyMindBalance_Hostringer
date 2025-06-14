@@ -1,93 +1,163 @@
 import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
-
-// Create a transporter using Gmail
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+import { sql } from '@vercel/postgres';
 
 export async function POST(request) {
   try {
-    const data = await request.json();
-    const { name, email, phone, date, time, service, message } = data;
+    console.log('Starting appointment booking process...');
+    
+    const requestData = await request.json();
+    console.log('Received appointment data:', requestData);
+
+    const {
+      name,
+      email,
+      phone,
+      date,
+      time,
+      service,
+      message
+    } = requestData;
 
     // Validate required fields
     if (!name || !email || !phone || !date || !time || !service) {
+      console.error('Missing required fields:', { name, email, phone, date, time, service });
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { success: false, message: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    // Format the date
-    const formattedDate = new Date(date).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-
-    // Format the time slot
-    const timeSlot = time === 'morning' ? '10:30 AM - 11:00 AM' : '5:45 PM - 10:00 PM';
-
-    // Prepare email content
-    const emailContent = `
-      New Appointment Request
-
-      Patient Details:
-      Name: ${name}
-      Email: ${email}
-      Phone: ${phone}
-
-      Appointment Details:
-      Service: ${service}
-      Date: ${formattedDate}
-      Time: ${timeSlot}
-      ${message ? `Additional Message: ${message}` : ''}
+    console.log('Creating/updating user...');
+    // First, create or get the user
+    const userResult = await sql`
+      INSERT INTO "Users" (name, email, phone, password, role)
+      VALUES (${name}, ${email}, ${phone}, 'default_password', 'patient')
+      ON CONFLICT (email) DO UPDATE
+      SET name = EXCLUDED.name, phone = EXCLUDED.phone
+      RETURNING id;
     `;
+    console.log('User result:', userResult.rows[0]);
 
-    // Send email to clinic
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER, // Send to the same email
-      subject: 'New Appointment Request',
-      text: emailContent,
+    const userId = userResult.rows[0].id;
+
+    console.log('Checking for available doctors...');
+    // Get the first available doctor
+    const doctorResult = await sql`
+      SELECT id FROM "Doctors" LIMIT 1;
+    `;
+    console.log('Doctor result:', doctorResult.rows);
+
+    if (doctorResult.rows.length === 0) {
+      console.error('No doctors available in the database');
+      throw new Error('No doctors available');
+    }
+
+    const doctorId = doctorResult.rows[0].id;
+    console.log('Selected doctor ID:', doctorId);
+
+    console.log('Creating appointment...');
+    // Create the appointment
+    const appointmentResult = await sql`
+      INSERT INTO "Appointments" (
+        patient_id,
+        doctor_id,
+        appointment_date,
+        appointment_time,
+        status
+      )
+      VALUES (
+        ${userId},
+        ${doctorId},
+        ${date},
+        ${time},
+        'pending'
+      )
+      RETURNING id;
+    `;
+    console.log('Appointment created:', appointmentResult.rows[0]);
+
+    const appointmentId = appointmentResult.rows[0].id;
+
+    console.log('Creating notification...');
+    // Create a notification for the appointment
+    await sql`
+      INSERT INTO "Notifications" (
+        user_id,
+        appointment_id,
+        notification_type,
+        notification_date
+      )
+      VALUES (
+        ${userId},
+        ${appointmentId},
+        'appointment_created',
+        CURRENT_DATE
+      );
+    `;
+    console.log('Notification created successfully');
+
+    return NextResponse.json({
+      success: true,
+      message: 'Appointment booked successfully',
+      appointmentId
     });
-
-    // Send confirmation email to patient
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: 'Appointment Request Received - Body Mind Balance',
-      text: `
-        Dear ${name},
-
-        Thank you for booking an appointment with Body Mind Balance. We have received your request and will contact you shortly to confirm your appointment.
-
-        Appointment Details:
-        Service: ${service}
-        Date: ${formattedDate}
-        Time: ${timeSlot}
-
-        If you have any questions, please don't hesitate to contact us.
-
-        Best regards,
-        Body Mind Balance Team
-      `,
-    });
-
-    return NextResponse.json(
-      { message: 'Appointment request received successfully' },
-      { status: 200 }
-    );
   } catch (error) {
-    console.error('Error processing appointment:', error);
+    console.error('Detailed error in appointment booking:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    
     return NextResponse.json(
-      { error: 'Failed to process appointment request' },
+      { 
+        success: false, 
+        message: 'Failed to book appointment',
+        error: error.message,
+        details: error.stack
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function GET() {
+  try {
+    console.log('Fetching appointments...');
+    const result = await sql`
+      SELECT 
+        a.id,
+        a.appointment_date,
+        a.appointment_time,
+        a.status,
+        u.name as patient_name,
+        u.email as patient_email,
+        d.name as doctor_name,
+        d.specialty
+      FROM "Appointments" a
+      JOIN "Users" u ON a.patient_id = u.id
+      JOIN "Doctors" d ON a.doctor_id = d.id
+      ORDER BY a.appointment_date DESC, a.appointment_time DESC;
+    `;
+    console.log('Found appointments:', result.rows.length);
+
+    return NextResponse.json({
+      success: true,
+      appointments: result.rows
+    });
+  } catch (error) {
+    console.error('Error fetching appointments:', {
+      message: error.message,
+      stack: error.stack,
+      code: error.code
+    });
+    
+    return NextResponse.json(
+      { 
+        success: false, 
+        message: 'Failed to fetch appointments',
+        error: error.message,
+        details: error.stack
+      },
       { status: 500 }
     );
   }

@@ -15,6 +15,7 @@ export default function AppointmentForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,8 +29,11 @@ export default function AppointmentForm() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+    setErrorMessage('');
 
     try {
+      console.log('Submitting appointment data:', formData);
+      
       const response = await fetch('/api/appointments', {
         method: 'POST',
         headers: {
@@ -38,8 +42,11 @@ export default function AppointmentForm() {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+      console.log('Appointment API response:', data);
+
       if (!response.ok) {
-        throw new Error('Failed to book appointment');
+        throw new Error(data.message || 'Failed to book appointment');
       }
 
       setSubmitStatus('success');
@@ -53,8 +60,9 @@ export default function AppointmentForm() {
         message: ''
       });
     } catch (error) {
-      setSubmitStatus('error');
       console.error('Error booking appointment:', error);
+      setSubmitStatus('error');
+      setErrorMessage(error.message || 'An error occurred while booking your appointment. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -77,7 +85,7 @@ export default function AppointmentForm() {
       
       {submitStatus === 'error' && (
         <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg">
-          Sorry, there was an error booking your appointment. Please try again.
+          {errorMessage || 'Sorry, there was an error booking your appointment. Please try again.'}
         </div>
       )}
 
@@ -162,6 +170,7 @@ export default function AppointmentForm() {
               required
               value={formData.date}
               onChange={handleChange}
+              min={new Date().toISOString().split('T')[0]}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
           </div>
@@ -179,8 +188,12 @@ export default function AppointmentForm() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select a time</option>
-              <option value="morning">Morning (10:30 AM - 11:00 AM)</option>
-              <option value="evening">Evening (5:45 PM - 10:00 PM)</option>
+              <option value="10:30:00">Morning (10:30 AM)</option>
+              <option value="11:00:00">Morning (11:00 AM)</option>
+              <option value="17:45:00">Evening (5:45 PM)</option>
+              <option value="18:00:00">Evening (6:00 PM)</option>
+              <option value="18:15:00">Evening (6:15 PM)</option>
+              <option value="18:30:00">Evening (6:30 PM)</option>
             </select>
           </div>
         </div>

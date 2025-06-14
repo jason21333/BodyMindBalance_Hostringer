@@ -24,7 +24,8 @@ export default function LatestPosts() {
       id: 3,
       title: 'Healthy Weight Loss Strategies',
       description: 'Evidence-based strategies for sustainable weight management.',
-      image: '/blood-disorders.jpg',
+      image: '/weight.jpg',
+      link: '/blog/healthy-weight-loss-strategies'
     },
   ];
 

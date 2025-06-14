@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+
 
 export default function HealthyWeightLossStrategiesPage() {
   // Force recompile
@@ -15,6 +17,27 @@ export default function HealthyWeightLossStrategiesPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 text-center">
             Healthy Weight Loss Strategies
           </h1>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div className="relative h-[300px] rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/Weight.jpg"
+                alt="Healthy lifestyle image"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+            <div className="relative h-[300px] rounded-xl overflow-hidden shadow-lg">
+              <Image
+                src="/food.jpg"
+                alt="Healthy food image"
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          </div>
 
           <p className="text-lg text-gray-700 mb-6 leading-relaxed">
             Achieving and maintaining a healthy weight is crucial for overall well-being and reducing the risk of chronic diseases. Sustainable weight management involves more than just dieting; it requires a holistic approach that integrates balanced nutrition, regular physical activity, and mindful habits.

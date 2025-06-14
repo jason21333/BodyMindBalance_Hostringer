@@ -47,7 +47,7 @@ export default function DoctorIntro() {
             {/* Quote adjusted to be in the empty space below the photo */}
             <div className="text-center max-w-2xl mx-auto flex-grow flex items-center justify-center py-4">
               <p className="text-xl sm:text-2xl font-bold text-gray-900 italic leading-relaxed tracking-wide">
-                "Diabetes is a condition, not a life sentence."
+                "Diabetes is a Disease, not a life sentence."
               </p>
             </div>
           </motion.div>
