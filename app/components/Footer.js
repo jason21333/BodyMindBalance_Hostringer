@@ -104,7 +104,8 @@ export default function Footer() {
                   href="mailto:bodymindbalancepalavacity@gmail.com" 
                   className="hover:text-white transition-colors break-all text-sm sm:text-base"
                 >
-                  bodymindbalancepalavacity@gmail.com
+                  <span className="block sm:inline">bodymindbalance</span>
+                  <span className="block sm:inline">palavacity@gmail.com</span>
                 </a>
               </li>
             </ul>
