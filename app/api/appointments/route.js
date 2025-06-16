@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createUser, createAppointment, createNotification, getAvailableTimeSlots } from '@/app/lib/db';
+import { createUser, createAppointment, createNotification, getAvailableTimeSlots, getAppointmentsByUserId } from '@/lib/db';
 
 export async function POST(request) {
   try {
