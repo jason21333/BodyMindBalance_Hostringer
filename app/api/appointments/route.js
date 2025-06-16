@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@vercel/postgres';
+import { createUser, createAppointment, createNotification, getAvailableTimeSlots } from '@/app/lib/db';
 
 export async function POST(request) {
   try {
@@ -27,79 +27,46 @@ export async function POST(request) {
       );
     }
 
-    console.log('Creating/updating user...');
-    // First, create or get the user
-    const userResult = await sql`
-      INSERT INTO "Users" (name, email, phone, password, role)
-      VALUES (${name}, ${email}, ${phone}, 'default_password', 'patient')
-      ON CONFLICT (email) DO UPDATE
-      SET name = EXCLUDED.name, phone = EXCLUDED.phone
-      RETURNING id;
-    `;
-    console.log('User result:', userResult.rows[0]);
+    // Create or get user
+    const user = await createUser({
+      name,
+      email,
+      phone,
+      password: 'default_password', // In a real app, you'd want to handle this differently
+      role: 'patient'
+    });
 
-    const userId = userResult.rows[0].id;
-
-    console.log('Checking for available doctors...');
-    // Get the first available doctor
-    const doctorResult = await sql`
-      SELECT id FROM "Doctors" LIMIT 1;
-    `;
-    console.log('Doctor result:', doctorResult.rows);
-
-    if (doctorResult.rows.length === 0) {
-      console.error('No doctors available in the database');
-      throw new Error('No doctors available');
+    // Get available time slots for the selected date
+    const availableSlots = await getAvailableTimeSlots(1, date); // Assuming doctor ID 1 for now
+    if (!availableSlots.includes(time)) {
+      return NextResponse.json(
+        { success: false, message: 'Selected time slot is not available' },
+        { status: 400 }
+      );
     }
 
-    const doctorId = doctorResult.rows[0].id;
-    console.log('Selected doctor ID:', doctorId);
+    // Create appointment
+    const appointment = await createAppointment({
+      patientId: user.id,
+      doctorId: 1, // Assuming doctor ID 1 for now
+      serviceId: 1, // You'll need to map service names to IDs
+      appointmentDate: date,
+      appointmentTime: time,
+      notes: message
+    });
 
-    console.log('Creating appointment...');
-    // Create the appointment
-    const appointmentResult = await sql`
-      INSERT INTO "Appointments" (
-        patient_id,
-        doctor_id,
-        appointment_date,
-        appointment_time,
-        status
-      )
-      VALUES (
-        ${userId},
-        ${doctorId},
-        ${date},
-        ${time},
-        'pending'
-      )
-      RETURNING id;
-    `;
-    console.log('Appointment created:', appointmentResult.rows[0]);
-
-    const appointmentId = appointmentResult.rows[0].id;
-
-    console.log('Creating notification...');
-    // Create a notification for the appointment
-    await sql`
-      INSERT INTO "Notifications" (
-        user_id,
-        appointment_id,
-        notification_type,
-        notification_date
-      )
-      VALUES (
-        ${userId},
-        ${appointmentId},
-        'appointment_created',
-        CURRENT_DATE
-      );
-    `;
-    console.log('Notification created successfully');
+    // Create notification
+    await createNotification({
+      userId: user.id,
+      appointmentId: appointment.id,
+      notificationType: 'appointment_created',
+      message: `Your appointment has been scheduled for ${date} at ${time}`
+    });
 
     return NextResponse.json({
       success: true,
       message: 'Appointment booked successfully',
-      appointmentId
+      appointmentId: appointment.id
     });
   } catch (error) {
     console.error('Detailed error in appointment booking:', {
@@ -112,51 +79,39 @@ export async function POST(request) {
       { 
         success: false, 
         message: 'Failed to book appointment',
-        error: error.message,
-        details: error.stack
+        error: error.message
       },
       { status: 500 }
     );
   }
 }
 
-export async function GET() {
+export async function GET(request) {
   try {
-    console.log('Fetching appointments...');
-    const result = await sql`
-      SELECT 
-        a.id,
-        a.appointment_date,
-        a.appointment_time,
-        a.status,
-        u.name as patient_name,
-        u.email as patient_email,
-        d.name as doctor_name,
-        d.specialty
-      FROM "Appointments" a
-      JOIN "Users" u ON a.patient_id = u.id
-      JOIN "Doctors" d ON a.doctor_id = d.id
-      ORDER BY a.appointment_date DESC, a.appointment_time DESC;
-    `;
-    console.log('Found appointments:', result.rows.length);
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
 
+    if (!userId) {
+      return NextResponse.json(
+        { success: false, message: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    const appointments = await getAppointmentsByUserId(userId);
+    
     return NextResponse.json({
       success: true,
-      appointments: result.rows
+      appointments
     });
   } catch (error) {
-    console.error('Error fetching appointments:', {
-      message: error.message,
-      stack: error.stack,
-      code: error.code
-    });
+    console.error('Error fetching appointments:', error);
     
     return NextResponse.json(
       { 
         success: false, 
         message: 'Failed to fetch appointments',
-        error: error.message,
-        details: error.stack
+        error: error.message
       },
       { status: 500 }
     );
