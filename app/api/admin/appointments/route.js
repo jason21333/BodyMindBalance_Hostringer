@@ -1,44 +1,92 @@
-import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import { sql } from '@vercel/postgres';
 
-export async function GET(request) {
+// Import the in-memory database (we'll need to expose it)
+let inMemoryDB = {
+  users: [],
+  appointments: [],
+  doctors: [
+    { id: 1, name: 'Dr. Agit Roy', specialty: 'General Medicine', email: 'agit.roy@bmb.com' },
+    { id: 2, name: 'Dr. Sarah Johnson', specialty: 'Cardiology', email: 'sarah.johnson@bmb.com' },
+    { id: 3, name: 'Dr. Michael Chen', specialty: 'Endocrinology', email: 'michael.chen@bmb.com' }
+  ],
+  services: [
+    { id: 1, name: 'General Consultation', price: 500.00 },
+    { id: 2, name: 'Specialist Consultation', price: 800.00 },
+    { id: 3, name: 'Health Screening', price: 1200.00 },
+    { id: 4, name: 'Follow-up Consultation', price: 300.00 }
+  ],
+  notifications: []
+};
+
+export async function GET() {
   try {
-    const { searchParams } = new URL(request.url);
-    const filter = searchParams.get('filter') || 'all';
-
-    let query = `
-      SELECT 
-        a.id,
-        a.date,
-        a.time,
-        a.status,
-        a.notes,
-        u.name as patient_name,
-        u.email as patient_email,
-        d.name as doctor_name,
-        s.name as service_name
-      FROM "Appointments" a
-      JOIN "Users" u ON a.patient_id = u.id
-      JOIN "Doctors" d ON a.doctor_id = d.id
-      JOIN "Services" s ON a.service_id = s.id
-    `;
-
-    if (filter !== 'all') {
-      query += ` WHERE a.status = '${filter}'`;
+    // Check if we have a real database connection
+    let hasRealDB = false;
+    try {
+      await sql`SELECT 1`;
+      hasRealDB = true;
+    } catch (error) {
+      hasRealDB = false;
     }
 
-    query += ` ORDER BY a.date DESC, a.time ASC`;
+    if (hasRealDB) {
+      // Use real database
+      const result = await sql`
+        SELECT 
+          a.id,
+          a.date,
+          a.time,
+          a.status,
+          a.notes,
+          u.name as patient_name,
+          u.email as patient_email,
+          u.phone as patient_phone,
+          d.name as doctor_name,
+          s.name as service_name
+        FROM "Appointments" a
+        JOIN "Users" u ON a.patient_id = u.id
+        JOIN "Doctors" d ON a.doctor_id = d.id
+        JOIN "Services" s ON a.service_id = s.id
+        ORDER BY a.date DESC, a.time ASC;
+      `;
+      
+      return NextResponse.json({
+        success: true,
+        appointments: result.rows,
+        source: 'database'
+      });
+    } else {
+      // Use in-memory storage
+      const appointments = inMemoryDB.appointments.map(apt => ({
+        id: apt.id,
+        date: apt.date,
+        time: apt.time,
+        status: apt.status,
+        notes: apt.notes,
+        patient_name: inMemoryDB.users.find(u => u.id === apt.patient_id)?.name || 'Unknown',
+        patient_email: inMemoryDB.users.find(u => u.id === apt.patient_id)?.email || 'Unknown',
+        patient_phone: inMemoryDB.users.find(u => u.id === apt.patient_id)?.phone || 'Unknown',
+        doctor_name: inMemoryDB.doctors.find(d => d.id === apt.doctor_id)?.name || 'Unknown Doctor',
+        service_name: inMemoryDB.services.find(s => s.id === apt.service_id)?.name || 'Unknown Service'
+      }));
 
-    const result = await sql.query(query);
-
-    return NextResponse.json({
-      success: true,
-      appointments: result.rows
-    });
+      return NextResponse.json({
+        success: true,
+        appointments,
+        source: 'in-memory',
+        total_appointments: appointments.length,
+        total_users: inMemoryDB.users.length
+      });
+    }
   } catch (error) {
     console.error('Error fetching appointments:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch appointments' },
+      { 
+        success: false, 
+        message: 'Failed to fetch appointments',
+        error: error.message
+      },
       { status: 500 }
     );
   }
