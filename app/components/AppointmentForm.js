@@ -152,10 +152,10 @@ export default function AppointmentForm() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select a service</option>
-              <option value="diabetes">Diabetes Care</option>
-              <option value="hypertension">Hypertension Management</option>
-              <option value="weight-loss">Weight Loss Program</option>
-              <option value="other">Other</option>
+              <option value="general consultation">General Consultation</option>
+              <option value="specialist consultation">Specialist Consultation</option>
+              <option value="health screening">Health Screening</option>
+              <option value="follow-up consultation">Follow-up Consultation</option>
             </select>
           </div>
 
@@ -188,12 +188,12 @@ export default function AppointmentForm() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             >
               <option value="">Select a time</option>
-              <option value="10:30:00">Morning (10:30 AM)</option>
-              <option value="11:00:00">Morning (11:00 AM)</option>
-              <option value="17:45:00">Evening (5:45 PM)</option>
-              <option value="18:00:00">Evening (6:00 PM)</option>
-              <option value="18:15:00">Evening (6:15 PM)</option>
-              <option value="18:30:00">Evening (6:30 PM)</option>
+              <option value="09:00">Morning (9:00 AM)</option>
+              <option value="10:00">Morning (10:00 AM)</option>
+              <option value="11:00">Morning (11:00 AM)</option>
+              <option value="14:00">Afternoon (2:00 PM)</option>
+              <option value="15:00">Afternoon (3:00 PM)</option>
+              <option value="16:00">Afternoon (4:00 PM)</option>
             </select>
           </div>
         </div>

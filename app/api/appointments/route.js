@@ -1,6 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createUser, createAppointment, createNotification, getAvailableTimeSlots, getAppointmentsByUserId } from '@/lib/db';
 
+// Service mapping
+const serviceMap = {
+  'consultation': 1,
+  'general consultation': 1,
+  'specialist consultation': 2,
+  'health screening': 3,
+  'follow-up consultation': 4,
+  'follow up consultation': 4
+};
+
 export async function POST(request) {
   try {
     console.log('Starting appointment booking process...');
@@ -36,11 +46,29 @@ export async function POST(request) {
       role: 'patient'
     });
 
+    // Map service name to ID
+    const serviceId = serviceMap[service.toLowerCase()] || 1; // Default to General Consultation
+
     // Get available time slots for the selected date
     const availableSlots = await getAvailableTimeSlots(1, date); // Assuming doctor ID 1 for now
-    if (!availableSlots.includes(time)) {
+    console.log('Available time slots:', availableSlots);
+    console.log('Requested time:', time);
+    
+    // More flexible time slot validation
+    const requestedTime = time.trim();
+    const isTimeAvailable = availableSlots.some(slot => 
+      slot.trim() === requestedTime || 
+      slot.includes(requestedTime) || 
+      requestedTime.includes(slot)
+    );
+
+    if (!isTimeAvailable) {
+      console.log('Time slot not available. Available slots:', availableSlots);
       return NextResponse.json(
-        { success: false, message: 'Selected time slot is not available' },
+        { 
+          success: false, 
+          message: `Selected time slot (${time}) is not available. Available slots: ${availableSlots.join(', ')}` 
+        },
         { status: 400 }
       );
     }
@@ -49,9 +77,9 @@ export async function POST(request) {
     const appointment = await createAppointment({
       patientId: user.id,
       doctorId: 1, // Assuming doctor ID 1 for now
-      serviceId: 1, // You'll need to map service names to IDs
-      appointmentDate: date,
-      appointmentTime: time,
+      serviceId: serviceId,
+      date: date,
+      time: time,
       notes: message
     });
 
