@@ -1,23 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sql } from '@vercel/postgres';
-
-// Import the in-memory database (we'll need to expose it)
-let inMemoryDB = {
-  users: [],
-  appointments: [],
-  doctors: [
-    { id: 1, name: 'Dr. Agit Roy', specialty: 'General Medicine', email: 'agit.roy@bmb.com' },
-    { id: 2, name: 'Dr. Sarah Johnson', specialty: 'Cardiology', email: 'sarah.johnson@bmb.com' },
-    { id: 3, name: 'Dr. Michael Chen', specialty: 'Endocrinology', email: 'michael.chen@bmb.com' }
-  ],
-  services: [
-    { id: 1, name: 'General Consultation', price: 500.00 },
-    { id: 2, name: 'Specialist Consultation', price: 800.00 },
-    { id: 3, name: 'Health Screening', price: 1200.00 },
-    { id: 4, name: 'Follow-up Consultation', price: 300.00 }
-  ],
-  notifications: []
-};
+import { getInMemoryDB } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -58,6 +41,14 @@ export async function GET() {
       });
     } else {
       // Use in-memory storage
+      const inMemoryDB = getInMemoryDB();
+      console.log('Admin API - In-memory DB state:', {
+        users: inMemoryDB.users.length,
+        appointments: inMemoryDB.appointments.length,
+        doctors: inMemoryDB.doctors.length,
+        services: inMemoryDB.services.length
+      });
+
       const appointments = inMemoryDB.appointments.map(apt => ({
         id: apt.id,
         date: apt.date,
@@ -76,7 +67,11 @@ export async function GET() {
         appointments,
         source: 'in-memory',
         total_appointments: appointments.length,
-        total_users: inMemoryDB.users.length
+        total_users: inMemoryDB.users.length,
+        debug_info: {
+          users: inMemoryDB.users,
+          appointments: inMemoryDB.appointments
+        }
       });
     }
   } catch (error) {
