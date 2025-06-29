@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen pt-20">
       <Hero />
       <DoctorIntro />
       <Services />

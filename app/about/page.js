@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 pt-20">
       {/* Full-width Banner Image */}
       <div className="relative w-full h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden mb-12">
         <Image

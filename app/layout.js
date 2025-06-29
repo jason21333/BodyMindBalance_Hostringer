@@ -21,12 +21,14 @@ export const metadata = {
   title: "Body Mind Balance - Wellness & Medical Center",
   description: "Expert care for diabetes, hypertension, and weight management. Holistic wellness solutions for a healthier you.",
   keywords: "diabetes care, hypertension management, weight loss, wellness center, medical center",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${sourceCode.variable}`}>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="icon" href="/bmb-logo.png" />
       </head>
       <body className="antialiased">

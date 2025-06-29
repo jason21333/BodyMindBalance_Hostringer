@@ -25,6 +25,20 @@ html {
   scroll-padding-top: 5rem;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ensure proper layout structure */
+#__next {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 /* Navigation and Logo Styles */
 .menu-logo-wrapper {
   position: relative;
@@ -130,8 +144,45 @@ html {
   background-size: 20px 20px;
 }
 
+/* Ensure content is always visible even if animations fail */
+.motion-safe\:animate-fade-in {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Fix for potential layout issues */
+main {
+  flex: 1;
+  width: 100%;
+}
+
+section {
+  width: 100%;
+  position: relative;
+}
+
+/* Responsive fixes */
 @media (max-width: 768px) {
   html {
     scroll-padding-top: 4rem;
   }
+  
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Ensure images don't cause layout shifts */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix for potential z-index issues */
+.navbar {
+  z-index: 50;
+}
+
+.whatsapp-button {
+  z-index: 40;
 }

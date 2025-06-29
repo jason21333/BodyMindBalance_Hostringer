@@ -37,8 +37,12 @@ const slides = [
 
 export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [motionLoaded, setMotionLoaded] = useState(false);
 
   useEffect(() => {
+    // Check if framer-motion is loaded
+    setMotionLoaded(true);
+    
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
@@ -52,17 +56,20 @@ export default function Hero() {
     }
   };
 
+  // Fallback component if motion is not loaded
+  const MotionDiv = motionLoaded ? motion.div : 'div';
+
   return (
-    <section className="relative w-full h-[auto] min-h-[80vh] sm:h-[85vh] md:h-[90vh] bg-gradient-to-b from-blue-50 to-white pb-0">
+    <section className="relative w-full h-[auto] min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-5rem)] md:min-h-[calc(100vh-5rem)] bg-gradient-to-b from-blue-50 to-white pb-0">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-30" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Text Content */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+          <MotionDiv
+            initial={motionLoaded ? { opacity: 0, y: 20 } : false}
+            animate={motionLoaded ? { opacity: 1, y: 0 } : false}
+            transition={motionLoaded ? { duration: 0.8 } : false}
             className="text-center lg:text-left space-y-6 sm:space-y-8"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
@@ -89,10 +96,10 @@ export default function Hero() {
             </div>
 
             {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+            <MotionDiv
+              initial={motionLoaded ? { opacity: 0, y: 20 } : false}
+              animate={motionLoaded ? { opacity: 1, y: 0 } : false}
+              transition={motionLoaded ? { duration: 0.8, delay: 0.2 } : false}
               className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8"
             >
               {stats.map((stat, index) => (
@@ -105,22 +112,22 @@ export default function Hero() {
                   </div>
                 </div>
               ))}
-            </motion.div>
-          </motion.div>
+            </MotionDiv>
+          </MotionDiv>
 
           {/* Image Slider */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
+          <MotionDiv
+            initial={motionLoaded ? { opacity: 0, x: 20 } : false}
+            animate={motionLoaded ? { opacity: 1, x: 0 } : false}
+            transition={motionLoaded ? { duration: 0.7 } : false}
             className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl"
           >
             {slides.map((slide, idx) => (
-              <motion.div
+              <MotionDiv
                 key={idx}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: currentSlide === idx ? 1 : 0 }}
-                transition={{ duration: 0.5 }}
+                initial={motionLoaded ? { opacity: 0 } : false}
+                animate={motionLoaded ? { opacity: currentSlide === idx ? 1 : 0 } : false}
+                transition={motionLoaded ? { duration: 0.5 } : false}
                 className="absolute inset-0"
               >
                 <Image
@@ -132,9 +139,9 @@ export default function Hero() {
                   priority={idx === 0}
                 />
                 <div className="absolute inset-0 bg-black/20" />
-              </motion.div>
+              </MotionDiv>
             ))}
-          </motion.div>
+          </MotionDiv>
         </div>
       </div>
     </section>
