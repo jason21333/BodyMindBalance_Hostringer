@@ -74,5 +74,5 @@ CREATE INDEX IF NOT EXISTS idx_appointments_patient_id ON "Appointments"(patient
 CREATE INDEX IF NOT EXISTS idx_appointments_doctor_id ON "Appointments"(doctor_id);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON "Appointments"(date);
 CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON "Notifications"(user_id);
-CREATE INDEX IF NOT EXISTS idx_doctor_availability_doctor_id ON "DoctorAvailability"(doctor_id);
+CREATE INDEX IF NOT EXISTS idx_doctor_availability_doctor_id ON "DoctorAvailability"(doctor_id); 
 CREATE INDEX IF NOT EXISTS idx_doctor_availability_date ON "DoctorAvailability"(date); 

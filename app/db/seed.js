@@ -34,7 +34,7 @@ export async function seedDatabase() {
         INSERT INTO "Doctors" (name, email, phone, specialty, bio)
         VALUES (${doctor.name}, ${doctor.email}, ${doctor.phone}, ${doctor.specialty}, ${doctor.bio})
         ON CONFLICT (email) DO NOTHING;
-      `;
+    `;
     }
 
     // Insert services
@@ -67,7 +67,7 @@ export async function seedDatabase() {
 
     for (const service of services) {
       await sql`
-        INSERT INTO "Services" (name, description, duration, price)
+      INSERT INTO "Services" (name, description, duration, price)
         VALUES (${service.name}, ${service.description}, ${service.duration}, ${service.price})
         ON CONFLICT (name) DO NOTHING;
       `;
@@ -93,7 +93,7 @@ export async function seedDatabase() {
             INSERT INTO "DoctorAvailability" (doctor_id, date, time, is_available)
             VALUES (${doctor.id}, ${date.toISOString().split('T')[0]}, ${time}, true)
             ON CONFLICT (doctor_id, date, time) DO NOTHING;
-          `;
+    `;
         }
       }
     }

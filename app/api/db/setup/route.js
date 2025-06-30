@@ -37,8 +37,8 @@ export async function POST() {
   } catch (error) {
     console.error('Database setup error:', error);
     return NextResponse.json(
-      {
-        success: false,
+      { 
+        success: false, 
         message: 'Database setup failed',
         error: error.message
       },
