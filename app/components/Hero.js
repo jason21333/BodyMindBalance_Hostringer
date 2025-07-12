@@ -67,9 +67,9 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Text Content */}
           <MotionDiv
-            initial={motionLoaded ? { opacity: 0, y: 20 } : false}
-            animate={motionLoaded ? { opacity: 1, y: 0 } : false}
-            transition={motionLoaded ? { duration: 0.8 } : false}
+            initial={motionLoaded ? { opacity: 0, y: 20 } : undefined}
+            animate={motionLoaded ? { opacity: 1, y: 0 } : undefined}
+            transition={motionLoaded ? { duration: 0.8 } : undefined}
             className="text-center lg:text-left space-y-6 sm:space-y-8"
           >
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
@@ -97,9 +97,9 @@ export default function Hero() {
 
             {/* Stats */}
             <MotionDiv
-              initial={motionLoaded ? { opacity: 0, y: 20 } : false}
-              animate={motionLoaded ? { opacity: 1, y: 0 } : false}
-              transition={motionLoaded ? { duration: 0.8, delay: 0.2 } : false}
+              initial={motionLoaded ? { opacity: 0, y: 20 } : undefined}
+              animate={motionLoaded ? { opacity: 1, y: 0 } : undefined}
+              transition={motionLoaded ? { duration: 0.8, delay: 0.2 } : undefined}
               className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8"
             >
               {stats.map((stat, index) => (
@@ -117,17 +117,17 @@ export default function Hero() {
 
           {/* Image Slider */}
           <MotionDiv
-            initial={motionLoaded ? { opacity: 0, x: 20 } : false}
-            animate={motionLoaded ? { opacity: 1, x: 0 } : false}
-            transition={motionLoaded ? { duration: 0.7 } : false}
+            initial={motionLoaded ? { opacity: 0, x: 20 } : undefined}
+            animate={motionLoaded ? { opacity: 1, x: 0 } : undefined}
+            transition={motionLoaded ? { duration: 0.7 } : undefined}
             className="relative w-full h-[400px] rounded-2xl overflow-hidden shadow-2xl"
           >
             {slides.map((slide, idx) => (
               <MotionDiv
                 key={idx}
-                initial={motionLoaded ? { opacity: 0 } : false}
-                animate={motionLoaded ? { opacity: currentSlide === idx ? 1 : 0 } : false}
-                transition={motionLoaded ? { duration: 0.5 } : false}
+                initial={motionLoaded ? { opacity: 0 } : undefined}
+                animate={motionLoaded ? { opacity: currentSlide === idx ? 1 : 0 } : undefined}
+                transition={motionLoaded ? { duration: 0.5 } : undefined}
                 className="absolute inset-0"
               >
                 <Image

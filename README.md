@@ -1,36 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Body Mind Balance - Wellness & Medical Center
 
-## Getting Started
+A modern healthcare website with appointment booking functionality and a separate admin dashboard.
 
-First, run the development server:
+## 🏥 Features
 
+- **Main Website** (Port 3000)
+  - Professional healthcare landing page
+  - Appointment booking system
+  - Service showcase
+  - Doctor profiles
+  - Patient testimonials
+  - Contact forms
+
+- **Admin Website** (Port 3002)
+  - Dashboard with real-time statistics
+  - Appointment management
+  - Patient management
+  - Real-time updates from main website
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- PostgreSQL (optional, uses in-memory storage for development)
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd bmb-website
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. **Start the main website**
+```bash
+npm run dev
+```
+The main website will be available at [http://localhost:3000](http://localhost:3000)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Start the admin website** (in a separate terminal)
+```bash
+cd admin-website
+npm install
+npm run dev
+```
+The admin website will be available at [http://localhost:3002](http://localhost:3002)
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+bmb-website/
+├── app/                    # Main website (Next.js App Router)
+│   ├── components/         # React components
+│   ├── api/               # API routes
+│   └── ...
+├── admin-website/          # Admin dashboard (separate Next.js app)
+│   ├── src/
+│   │   ├── app/           # Admin pages
+│   │   ├── lib/           # Database utilities
+│   │   └── ...
+│   └── ...
+└── lib/                   # Shared database utilities
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔧 Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Environment Variables
 
-## Deploy on Vercel
+Create a `.env.local` file in the root directory:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```env
+# Database (optional for development)
+POSTGRES_URL=your_postgres_connection_string
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Admin website URL (for real-time sync)
+ADMIN_WEBSITE_URL=http://localhost:3002
+```
+
+### Database Setup
+
+For production, set up a PostgreSQL database and run:
+
+```bash
+npm run setup-db
+```
+
+For development, the app uses in-memory storage by default.
+
+## 🎯 Key Features
+
+### Real-time Sync
+- Appointments booked on the main website automatically appear in the admin dashboard
+- 30-second auto-refresh on admin pages
+- Live statistics and activity feeds
+
+### Appointment Booking
+- Available time slot validation
+- Email notifications
+- Service mapping
+- Doctor assignment
+
+### Admin Dashboard
+- Appointment management (confirm/cancel/edit)
+- Patient management
+- Real-time statistics
+- Search and filtering
+
+## 🛠️ Development
+
+### Main Website
+- Built with Next.js 15
+- Tailwind CSS for styling
+- Framer Motion for animations
+- Vercel Postgres for database
+
+### Admin Website
+- Separate Next.js application
+- TypeScript support
+- Real-time data updates
+- Professional admin interface
+
+## 📦 Deployment
+
+### Main Website
+```bash
+npm run build
+npm start
+```
+
+### Admin Website
+```bash
+cd admin-website
+npm run build
+npm start
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.

@@ -1,9 +1,9 @@
 import { Inter, Source_Code_Pro } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import Navbar from "./components/Navbar";
+import NavbarWrapper from "./components/NavbarWrapper";
 import "./globals.css";
-import Footer, { WhatsAppButton } from './components/Footer';
+import AppFooterWrapper from './components/AppFooterWrapper';
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,10 +33,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased">
         <div className="flex flex-col min-h-screen">
-          <Navbar />
+          <NavbarWrapper />
           {children}
-          <Footer />
-          <WhatsAppButton />
+          <AppFooterWrapper />
           <Analytics />
           <SpeedInsights />
         </div>

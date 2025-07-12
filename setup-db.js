@@ -49,9 +49,9 @@ try {
     console.log('✅ Database setup completed successfully!');
     console.log('');
     console.log('🎉 Your appointment booking system is ready!');
-    console.log('📍 Visit: http://localhost:3000');
-    console.log('👨‍⚕️  Admin Panel: http://localhost:3000/admin');
+    console.log('📍 Main Website: http://localhost:3000');
     console.log('📅 Book Appointment: http://localhost:3000/appointment');
+    console.log('👨‍⚕️  Admin Website: http://localhost:3002 (separate website)');
   } else {
     console.error('❌ Database setup failed:', result.message);
     if (result.error) {

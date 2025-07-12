@@ -11,6 +11,28 @@ const serviceMap = {
   'follow up consultation': 4
 };
 
+// Function to notify admin website about new appointment
+async function notifyAdminWebsite(appointmentData) {
+  try {
+    const adminUrl = process.env.ADMIN_WEBSITE_URL || 'http://localhost:3002';
+    const response = await fetch(`${adminUrl}/api/admin/appointments/sync`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(appointmentData),
+    });
+    
+    if (!response.ok) {
+      console.error('Failed to notify admin website:', response.statusText);
+    } else {
+      console.log('Successfully notified admin website about new appointment');
+    }
+  } catch (error) {
+    console.error('Error notifying admin website:', error);
+  }
+}
+
 export async function POST(request) {
   try {
     console.log('Starting appointment booking process...');
@@ -90,6 +112,37 @@ export async function POST(request) {
       notificationType: 'appointment_created',
       message: `Your appointment has been scheduled for ${date} at ${time}`
     });
+
+    // Prepare data for admin website notification
+    const appointmentData = {
+      id: appointment.id,
+      patient_id: user.id,
+      doctor_id: 1,
+      service_id: serviceId,
+      date: date,
+      time: time,
+      notes: message,
+      status: 'pending',
+      patient: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: 'patient'
+      },
+      doctor: {
+        id: 1,
+        name: 'Dr. Agit Roy',
+        specialty: 'General Medicine'
+      },
+      service: {
+        id: serviceId,
+        name: service
+      }
+    };
+
+    // Notify admin website asynchronously (don't wait for response)
+    notifyAdminWebsite(appointmentData);
 
     return NextResponse.json({
       success: true,

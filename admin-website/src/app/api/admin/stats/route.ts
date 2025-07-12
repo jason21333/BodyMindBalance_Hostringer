@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server';
+import { getDashboardStats } from '@/lib/db';
 
 export async function GET() {
   try {
-    // Return dummy data for now
-    const stats = {
-      totalAppointments: 25,
-      pendingAppointments: 8,
-      totalPatients: 50,
-      totalDoctors: 5
-    };
-
+    const stats = await getDashboardStats();
+    
     return NextResponse.json({
       success: true,
       stats
