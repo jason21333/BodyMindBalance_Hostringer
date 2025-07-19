@@ -8,8 +8,7 @@
   "scripts": {
     "post-install-cmd": [
       "php -r \"echo '🚀 Starting deployment...\\n';\"",
-      "php -r \"if (file_exists('deploy-hostinger.sh')) { echo '📦 Found deployment script\\n'; chmod('deploy-hostinger.sh', 0755); } else { echo '❌ Deployment script not found\\n'; }\"",
-      "php -r \"if (file_exists('deploy-hostinger.sh')) { passthru('./deploy-hostinger.sh 2>&1'); }\""
+      "php deploy.php"
     ]
   },
   "config": {
