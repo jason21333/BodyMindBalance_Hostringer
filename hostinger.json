@@ -1,0 +1,17 @@
+{
+  "build": {
+    "commands": [
+      "chmod +x build.sh",
+      "./build.sh"
+    ],
+    "output": "public_html"
+  },
+  "deploy": {
+    "type": "static",
+    "framework": "nextjs"
+  },
+  "environment": {
+    "NODE_VERSION": "18",
+    "NPM_VERSION": "9"
+  }
+} 

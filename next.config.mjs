@@ -11,7 +11,10 @@ const nextConfig = {
   },
   poweredByHeader: false,
   reactStrictMode: true,
-  output: 'standalone',
+  output: 'export',
+  trailingSlash: true,
+  distDir: '.next',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
 };
 
 export default nextConfig;
