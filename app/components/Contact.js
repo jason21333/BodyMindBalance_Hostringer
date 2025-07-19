@@ -29,7 +29,7 @@ export default function Contact() {
     setSubmitStatus({ type: '', message: '' });
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('https://yourdomain.com/php-backend/api/contact.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

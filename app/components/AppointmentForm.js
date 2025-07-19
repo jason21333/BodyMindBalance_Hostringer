@@ -25,6 +25,9 @@ export default function AppointmentForm() {
     }));
   };
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+  console.log('API_BASE:', API_BASE);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -34,7 +37,7 @@ export default function AppointmentForm() {
     try {
       console.log('Submitting appointment data:', formData);
       
-      const response = await fetch('/api/appointments', {
+      const response = await fetch(`${API_BASE}/appointments.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -1,0 +1,281 @@
+g#!/bin/bash
+
+# Hostinger Deployment Script
+# This script helps deploy your healthcare website to Hostinger
+
+echo "🚀 Starting Hostinger Deployment..."
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# Configuration
+DOMAIN="your-domain.com"
+ADMIN_SUBDOMAIN="admin.your-domain.com"
+FTP_HOST="$DOMAIN"
+FTP_USER="your-ftp-username"
+FTP_PASS="your-ftp-password"
+FTP_PORT="21"
+
+# Function to print colored output
+print_status() {
+    echo -e "${GREEN}[INFO]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Check if required tools are installed
+check_dependencies() {
+    print_status "Checking dependencies..."
+    
+    if ! command -v lftp &> /dev/null; then
+        print_warning "lftp not found. Installing..."
+        if command -v apt-get &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y lftp
+        elif command -v yum &> /dev/null; then
+            sudo yum install -y lftp
+        elif command -v brew &> /dev/null; then
+            brew install lftp
+        else
+            print_error "Please install lftp manually"
+            exit 1
+        fi
+    fi
+    
+    if ! command -v node &> /dev/null; then
+        print_error "Node.js not found. Please install Node.js first."
+        exit 1
+    fi
+    
+    print_status "Dependencies check completed"
+}
+
+# Create deployment package
+create_deployment_package() {
+    print_status "Creating deployment package..."
+    
+    # Create temp directory
+    TEMP_DIR="hostinger-deploy-$(date +%s)"
+    mkdir -p "$TEMP_DIR"
+    
+    # Copy main website files
+    print_status "Preparing main website files..."
+    cp -r app components lib public package.json next.config.mjs tailwind.config.js jsconfig.json middleware.js README.md "$TEMP_DIR/"
+    
+    # Copy admin website files
+    print_status "Preparing admin website files..."
+    mkdir -p "$TEMP_DIR/admin"
+    cp -r admin-website/src admin-website/public admin-website/package.json admin-website/next.config.mjs admin-website/tailwind.config.js admin-website/tsconfig.json "$TEMP_DIR/admin/"
+    
+    # Create deployment scripts
+    create_deployment_scripts "$TEMP_DIR"
+    
+    print_status "Deployment package created: $TEMP_DIR"
+}
+
+# Create deployment scripts
+create_deployment_scripts() {
+    local deploy_dir="$1"
+    
+    # Main website setup script
+    cat > "$deploy_dir/setup-main.sh" << 'EOF'
+#!/bin/bash
+echo "Setting up main website..."
+npm install
+npm run build
+echo "Main website setup completed"
+EOF
+    chmod +x "$deploy_dir/setup-main.sh"
+    
+    # Admin website setup script
+    cat > "$deploy_dir/admin/setup-admin.sh" << 'EOF'
+#!/bin/bash
+echo "Setting up admin website..."
+npm install
+npm run build
+echo "Admin website setup completed"
+EOF
+    chmod +x "$deploy_dir/admin/setup-admin.sh"
+    
+    # PM2 configuration
+    cat > "$deploy_dir/ecosystem.config.js" << 'EOF'
+module.exports = {
+  apps: [
+    {
+      name: 'bmb-website',
+      cwd: '/home/username/public_html',
+      script: 'npm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3000
+      }
+    },
+    {
+      name: 'bmb-admin',
+      cwd: '/home/username/public_html/admin',
+      script: 'npm',
+      args: 'start',
+      env: {
+        NODE_ENV: 'production',
+        PORT: 3001
+      }
+    }
+  ]
+};
+EOF
+    
+    # Environment variables template
+    cat > "$deploy_dir/.env.example" << 'EOF'
+NODE_ENV=production
+DATABASE_URL=mysql://username:password@localhost/database_name
+ADMIN_WEBSITE_URL=https://admin.your-domain.com
+EOF
+}
+
+# Upload files via FTP
+upload_files() {
+    print_status "Uploading files to Hostinger..."
+    
+    # Create FTP script
+    cat > ftp_upload.txt << EOF
+set ssl:verify-certificate no
+open -u $FTP_USER,$FTP_PASS $FTP_HOST:$FTP_PORT
+mirror --reverse --delete $TEMP_DIR/ public_html/
+bye
+EOF
+    
+    # Upload files
+    lftp -f ftp_upload.txt
+    
+    if [ $? -eq 0 ]; then
+        print_status "Files uploaded successfully"
+    else
+        print_error "Failed to upload files"
+        exit 1
+    fi
+    
+    # Clean up
+    rm ftp_upload.txt
+}
+
+# Execute remote commands via SSH (if available)
+execute_remote_commands() {
+    print_status "Setting up applications on server..."
+    
+    # Create SSH script
+    cat > remote_setup.sh << 'EOF'
+#!/bin/bash
+echo "Setting up applications..."
+
+# Navigate to main website directory
+cd public_html
+npm install
+npm run build
+
+# Navigate to admin website directory
+cd admin
+npm install
+npm run build
+
+# Install PM2 globally
+npm install -g pm2
+
+# Start applications with PM2
+cd ..
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+
+echo "Applications setup completed"
+EOF
+    
+    print_warning "Please execute the following commands on your Hostinger server:"
+    echo "1. SSH into your Hostinger server"
+    echo "2. Navigate to public_html directory"
+    echo "3. Run: chmod +x setup-main.sh && ./setup-main.sh"
+    echo "4. Run: cd admin && chmod +x setup-admin.sh && ./setup-admin.sh"
+    echo "5. Install PM2: npm install -g pm2"
+    echo "6. Start applications: pm2 start ecosystem.config.js"
+}
+
+# Setup domain configuration
+setup_domains() {
+    print_status "Domain configuration instructions:"
+    echo ""
+    echo "1. Log into your Hostinger hPanel"
+    echo "2. Go to 'Domains' section"
+    echo "3. Add subdomain: $ADMIN_SUBDOMAIN"
+    echo "4. Point it to: /public_html/admin"
+    echo ""
+    echo "5. Go to 'SSL' section"
+    echo "6. Enable SSL for: $DOMAIN"
+    echo "7. Enable SSL for: $ADMIN_SUBDOMAIN"
+    echo ""
+}
+
+# Setup database
+setup_database() {
+    print_status "Database setup instructions:"
+    echo ""
+    echo "1. In hPanel, go to 'Databases' section"
+    echo "2. Create a new MySQL database"
+    echo "3. Note down:"
+    echo "   - Database name"
+    echo "   - Username"
+    echo "   - Password"
+    echo "   - Host"
+    echo ""
+    echo "4. Update your .env file with database credentials"
+    echo "5. Run database migrations if needed"
+    echo ""
+}
+
+# Main deployment process
+main() {
+    echo "🏥 Healthcare Website Hostinger Deployment"
+    echo "=========================================="
+    echo ""
+    
+    # Check dependencies
+    check_dependencies
+    
+    # Create deployment package
+    create_deployment_package
+    
+    # Upload files
+    upload_files
+    
+    # Execute remote commands
+    execute_remote_commands
+    
+    # Setup instructions
+    setup_domains
+    setup_database
+    
+    print_status "Deployment completed!"
+    echo ""
+    echo "Next steps:"
+    echo "1. Configure your domains in Hostinger hPanel"
+    echo "2. Set up your database"
+    echo "3. Configure environment variables"
+    echo "4. Test your applications"
+    echo ""
+    echo "Main website: https://$DOMAIN"
+    echo "Admin website: https://$ADMIN_SUBDOMAIN"
+    
+    # Clean up
+    rm -rf "$TEMP_DIR"
+}
+
+# Run main function
+main "$@" 
+ print_status "Setting up applications on server..."
