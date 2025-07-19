@@ -1,5 +1,5 @@
 {
-  "name": "bmb-website",
+  "name": "jason21333/bmb-website",
   "description": "Body Mind Balance Healthcare Website",
   "type": "project",
   "require": {
@@ -13,5 +13,10 @@
   },
   "config": {
     "optimize-autoloader": true
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
   }
 } 
