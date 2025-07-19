@@ -1,12 +1,12 @@
 <?php
 // Toggle this for dev/prod
 // true = file-based storage (dev), false = MySQL (prod)
-define('USE_FILE_STORAGE', true); // Set to true for local testing
+define('USE_FILE_STORAGE', false); // Set to false for production
 
 $pdo = null; // Initialize globally
 
 if (!USE_FILE_STORAGE) {
-    // Remote database config for Hostinger
+    // Production database config for Hostinger
     $db_host = '193.203.184.74'; // Hostinger MySQL server IP
     $db_name = 'u166239076_25Bit';
     $db_user = 'u166239076_BMB_ARCHIVE';
