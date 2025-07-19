@@ -8,7 +8,7 @@
   "scripts": {
     "post-install-cmd": [
       "php -r \"echo '🚀 Starting deployment...\\n';\"",
-      "php deploy.php"
+      "php -r \"if (file_exists('deploy.php')) { echo '📦 Found deployment script\\n'; include 'deploy.php'; } else { echo '❌ Deployment script not found\\n'; }\""
     ]
   },
   "config": {
