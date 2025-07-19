@@ -15,6 +15,9 @@ const nextConfig = {
   trailingSlash: true,
   distDir: '.next',
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  // Disable middleware for static export
+  skipMiddlewareUrlNormalize: true,
+  skipTrailingSlashRedirect: true,
 };
 
 export default nextConfig;

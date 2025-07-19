@@ -1,0 +1,17 @@
+{
+  "name": "bmb-website",
+  "description": "Body Mind Balance Healthcare Website",
+  "type": "project",
+  "require": {
+    "php": ">=7.4"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "chmod +x deploy-hostinger.sh",
+      "./deploy-hostinger.sh"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+} 
